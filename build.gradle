@@ -14,19 +14,17 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+task copyToLib(type: Copy) {
+    into "$buildDir/libs"
+    from configurations.compile
+}
+
 jar {
+    dependsOn(copyToLib)
     manifest {
         attributes(
                 "Class-Path": configurations.compile.collect { it.getName() }.join(' '),
                 "Main-Class": "fr.sukub.fortytwo.Resolver"
         )
     }
-    doFirst {
-        copyToLib
-    }
-}
-
-task copyToLib(type: Copy) {
-    into "$buildDir/libs"
-    from configurations.compile
 }
